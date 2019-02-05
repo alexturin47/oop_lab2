@@ -725,7 +725,8 @@ namespace oop_lab1
 
         public void DrawCircle(Graphics gfx)
         {
-            Pen pen = new Pen ()
+            Pen pen = new Pen(getColor(), getWidth());
+            gfx.DrawEllipse(pen, getX(), getY(), getR(), getR());
         }
     }
    

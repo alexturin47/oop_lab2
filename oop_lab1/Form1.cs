@@ -17,6 +17,7 @@ namespace oop_lab1
         private tLine line;
         private tTriangle triangle;
         private tRectangle rectangle;
+        private tCircle circle;
         public Color bgColor;
         
 
@@ -131,6 +132,11 @@ namespace oop_lab1
                             panel1.BackColor, Convert.ToInt32(lineWidth.Value));
                         g.Clear(bgColor);
                         rectangle.DrawRectangle(g);
+                        break;
+                    }
+                case "Окружность":
+                    {
+                        circle = new tCircle()
                         break;
                     }
             }
