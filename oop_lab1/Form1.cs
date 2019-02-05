@@ -136,7 +136,10 @@ namespace oop_lab1
                     }
                 case "Окружность":
                     {
-                        circle = new tCircle()
+                        circle = new tCircle(Int32.Parse(textBox1.Text) - Int32.Parse(textBox3.Text), Int32.Parse(textBox2.Text) - Int32.Parse(textBox3.Text),
+                            Int32.Parse(textBox3.Text), panel1.BackColor, Convert.ToInt32(lineWidth.Value));
+                        g.Clear(bgColor);
+                        circle.DrawCircle(g);
                         break;
                     }
             }
@@ -230,6 +233,9 @@ namespace oop_lab1
                     {
                         labelStart.Text = "Центр окружности";
                         labelEnd.Text = "Радиус";
+                        textBox4.Visible = false;
+                        label6.Visible = false;
+                        label5.Text = "R";
                         break;
                     }
                 case "Эллипс":
@@ -330,7 +336,18 @@ namespace oop_lab1
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            textBox4.Text = textBox2.Text;
+            if(comboBox1.SelectedItem.ToString() == "Прямоугольник" ) textBox4.Text = textBox2.Text;
+            if(comboBox1.SelectedItem.ToString() == "Окружность")
+            {
+               if((Int32.Parse(textBox2.Text) + Int32.Parse(textBox3.Text)) > pictureBox1.Height){
+                    textBox2.Text = (pictureBox1.Height - Int32.Parse(textBox3.Text)).ToString();
+                }
+                if ((Int32.Parse(textBox2.Text) + Int32.Parse(textBox3.Text)) < pictureBox1.Height)
+                {
+                    textBox2.Text = textBox3.Text;
+                }
+            }
+             
         }
 
         private void textBox4_TextChanged(object sender, EventArgs e)
