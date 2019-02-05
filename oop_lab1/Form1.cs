@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Threading;
-using System.Collections;
 
 namespace oop_lab1
 {
@@ -11,13 +9,13 @@ namespace oop_lab1
     {
         private Graphics g;
         private Bitmap bitmap;
-        private bool keySt;
         private int coordX = 0;
         private int coordY = 0;
         private tLine line;
         private tTriangle triangle;
         private tRectangle rectangle;
         private tCircle circle;
+        private tEllipse ellips;
         public Color bgColor;
         
 
@@ -30,7 +28,7 @@ namespace oop_lab1
         {
             bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             g = Graphics.FromImage(bitmap);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
         }
 
         private void mainform_KeyDown(object sender, KeyEventArgs e)
@@ -57,6 +55,18 @@ namespace oop_lab1
                         rectangle.MoveKeysRectangle(e.KeyCode, pictureBox1.Width, pictureBox1.Height, g);
                         break;
                     }
+                case "Окружность":
+                    {
+                        if (circle == null) return;
+                        circle.MoveKeysCircle(e.KeyCode, pictureBox1.Width, pictureBox1.Height, g);
+                        break;
+                    }
+                case "Эллипс":
+                    {
+                        if (ellips == null) return;
+                        ellips.MoveKeysEllipse(e.KeyCode, pictureBox1.Width, pictureBox1.Height, g);
+                        break;
+                    }
             }
             
             
@@ -64,7 +74,6 @@ namespace oop_lab1
 
         private void buttonClose_Click(object sender, EventArgs e)
         {
-            keySt = true;
             Application.Exit();          
         }
 
@@ -136,65 +145,34 @@ namespace oop_lab1
                     }
                 case "Окружность":
                     {
-                        circle = new tCircle(Int32.Parse(textBox1.Text) - Int32.Parse(textBox3.Text), Int32.Parse(textBox2.Text) - Int32.Parse(textBox3.Text),
+                        int r = Int32.Parse(textBox3.Text);
+                        int x = Int32.Parse(textBox1.Text);
+                        int y = Int32.Parse(textBox2.Text);
+                        int width = pictureBox1.Width;
+                        if (x + r > width) r = width - x;
+                        if (x - r < 0) r = x;
+                        if (y + r > pictureBox1.Height) r = pictureBox1.Height - y;
+                        if (y + r < 0) r = y;
+                        textBox3.Text = r.ToString();
+                        circle = new tCircle((Int32.Parse(textBox1.Text) - Int32.Parse(textBox3.Text)), 
+                            (Int32.Parse(textBox2.Text) - Int32.Parse(textBox3.Text)),
                             Int32.Parse(textBox3.Text), panel1.BackColor, Convert.ToInt32(lineWidth.Value));
                         g.Clear(bgColor);
                         circle.DrawCircle(g);
                         break;
                     }
-            }
-
-            /*switch(comboBox1.SelectedItem.ToString())
-            {
-                case "Отрезок":
+                case "Эллипс":
                     {
-                        tLine line = new tLine();
-                        MessageBox.Show("Щелкните курсором мыши по экрану 2 раза указав начало и конец отрезка");
-                        tPoint[] point = new tPoint[2];
-
-                        for (int i = 0; i < 2; i++)
-                        {
-                           coordX = -1; coordY = -1;
-                           int j = 0;
-                           while (j != 1)
-                           {
-                               if( coordX != -1 && coordY != -1)
-                               {
-                                    point[i].SetX(coordX);
-                                    point[i].SetY(coordY);
-                                    j = 1;
-                               }
-                                Application.DoEvents();
-                           } 
-                        }
-
-                                                               
-
-
-                        line.Draw(g);
+                        ellips = new tEllipse((Int32.Parse(textBox1.Text) - Int32.Parse(textBox3.Text)), 
+                            (Int32.Parse(textBox2.Text) - Int32.Parse(textBox4.Text)),
+                            Int32.Parse(textBox3.Text), Int32.Parse(textBox4.Text), panel1.BackColor, Convert.ToInt32(lineWidth.Value));
+                        g.Clear(bgColor);
+                        ellips.DrawEllipse(g);
                         break;
                     }
-            }*/
+                
+            }
             
-        }
-
-        private void mainform_MouseClick(object sender, MouseEventArgs e)
-        {
-            coordX = e.X;
-            coordY = e.Y;
-        }
-
-        private void mainform_MouseMove(object sender, MouseEventArgs e)
-        {
-            int cursorX = Cursor.Position.X;
-            int cursorY = Cursor.Position.Y;
-            labelCursor.Text = "Позиция курсора: X = " + cursorX + "; Y = " + cursorY;
-
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void panel1_Click(object sender, EventArgs e)
@@ -211,16 +189,13 @@ namespace oop_lab1
             panel1_Click(sender, e);
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
         {
             labelDop.Visible = false;
             textBox5.Enabled = false;
             textBox6.Enabled = false;
+
             switch (comboBox1.SelectedItem.ToString())
             {
                 case "Отрезок":
@@ -241,11 +216,15 @@ namespace oop_lab1
                 case "Эллипс":
                     {
                         labelStart.Text = "Фокус эллипса";
-                        labelEnd.Text = "Больший радиус";
-                        labelDop.Text = "Меньший ралиус";
+                        labelEnd.Text = "Радиусы";
+                        labelDop.Visible = false;
                         labelDop.Visible = true;
-                        textBox5.Enabled = true;
-                        textBox6.Enabled = true;
+                        textBox4.Visible = true;
+                        label5.Text = "R1";
+                        label6.Visible = true;
+                        label6.Text = "R2";
+                        textBox5.Enabled = false;
+                        textBox6.Enabled = false;
                         break;
                     }
                 case "Треугольник":
@@ -266,8 +245,6 @@ namespace oop_lab1
                         labelDop.Visible = true;
                         textBox5.Enabled = true;
                         textBox6.Enabled = true;
-                        textBox1.Text = "400";
-                        textBox2.Text = "200";
                         textBox3.Text = "600";
                         textBox4.Text = "200";
                         textBox5.Text = "600";
@@ -280,13 +257,19 @@ namespace oop_lab1
         private void mainform_Load(object sender, EventArgs e)
         {
             bgColor = Color.White;
+            textBox1.Text = (pictureBox1.Width / 2).ToString();
+            textBox2.Text = (pictureBox1.Height / 2).ToString();
         }
 
-        private void buttonArrowMove_Click(object sender, EventArgs e)
+        private void buttonStopMove_Click(object sender, EventArgs e)
         {
             if (line != null) line.setStop(true);
             if (triangle != null) triangle.setStop(true);
             if (rectangle != null) rectangle.setStop(true);
+            if (circle != null) circle.setStop(true);
+            if (ellips != null) ellips.setStop(true);
+            buttonRandomMove.Text = "Случайное перемещение";
+            buttonStopMove.Enabled = false;
         }
 
         private void buttonRandomMove_Click(object sender, EventArgs e)
@@ -297,6 +280,8 @@ namespace oop_lab1
                 return;
             }
 
+            buttonRandomMove.Text = "Сменить направление";
+            buttonStopMove.Enabled = true;
             switch (comboBox1.SelectedItem.ToString())
             {
                 case "Отрезок":
@@ -326,6 +311,24 @@ namespace oop_lab1
                         }
                         break;
                     }
+                case "Окружность":
+                    {
+                        if (circle != null)
+                        {
+                            circle.setStop(false);
+                            circle.MoveRndCircle(pictureBox1.Width, pictureBox1.Height, g);
+                        }
+                        break;
+                    }
+                case "Эллипс":
+                    {
+                        if (ellips != null)
+                        {
+                            ellips.setStop(false);
+                            ellips.MoveRndEllipse(pictureBox1.Width, pictureBox1.Height, g);
+                        }
+                        break;
+                    }
             }
         }
 
@@ -336,33 +339,53 @@ namespace oop_lab1
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            if(comboBox1.SelectedItem.ToString() == "Прямоугольник" ) textBox4.Text = textBox2.Text;
-            if(comboBox1.SelectedItem.ToString() == "Окружность")
-            {
-               if((Int32.Parse(textBox2.Text) + Int32.Parse(textBox3.Text)) > pictureBox1.Height){
-                    textBox2.Text = (pictureBox1.Height - Int32.Parse(textBox3.Text)).ToString();
-                }
-                if ((Int32.Parse(textBox2.Text) + Int32.Parse(textBox3.Text)) < pictureBox1.Height)
-                {
-                    textBox2.Text = textBox3.Text;
-                }
-            }
-             
+            ValidatePoint();
         }
 
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
-            textBox2.Text = textBox4.Text;
+            ValidatePoint();
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
-            textBox5.Text = textBox3.Text;
+            ValidatePoint();
         }
 
         private void textBox5_TextChanged(object sender, EventArgs e)
         {
-            textBox3.Text = textBox5.Text;
+            ValidatePoint();
+        }
+
+        private void ValidatePoint()
+        {
+            if (comboBox1.SelectedIndex == -1) return;
+            switch (comboBox1.SelectedItem.ToString())
+            {
+                case "Прямоугольник":
+                    {
+                        textBox4.Text = textBox2.Text;
+                        textBox2.Text = textBox4.Text;
+                        textBox5.Text = textBox3.Text;
+                        textBox3.Text = textBox5.Text;
+                        break;
+                    }
+                default: break;
+            }
+
+        }
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            int cursorX = Cursor.Position.X;
+            int cursorY = Cursor.Position.Y - 77;
+            labelCursor.Text = "Позиция курсора: X = " + cursorX + "; Y = " + cursorY;
+        }
+
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            coordX = e.X;
+            coordY = e.Y;
         }
     }
 }

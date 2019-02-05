@@ -7,31 +7,19 @@ namespace oop_lab1
 {
     class tPoint
     {
-        private Color _color;
-        private int _x;
-        private int _y;
+        private Color _color = Color.Black;
+        private int _x = 0;
+        private int _y = 0;
+        private const int _size = 1;
 
         // конструкторы
-        public tPoint()
-        {
-            _x = 0;
-            _y = 0;
-            _color = Color.Black;
-        } 
-        // по умолчанию
+        public tPoint() : this(0, 0, Color.Black) { }
+
         public tPoint(int x, int y, Color color) // со всеми параметрами
         {
             _x = x;
             _y = y;
             _color = color;
-
-        }
-
-        public tPoint(int x, int y)
-        {
-            _x = x;
-            _y = y;
-            _color = Color.Black;
 
         }
 
@@ -64,20 +52,31 @@ namespace oop_lab1
         }
 
         //медот отрисовки точки
-        protected void Draw(Graphics gfx)
+        public void Draw(Graphics gfx)
         {
             Brush brush = new SolidBrush(_color);
+            gfx.FillRectangle(brush, _x, _y, _size, _size);
+        }
+
+        public void Hide(Graphics gfx, Color bkg)
+        {
+            Brush brush = new SolidBrush(bkg);
             gfx.FillRectangle(brush, _x, _y, 1, 1);
         }
 
-        protected void Clean(Graphics gfx)
+        public void Hide(Graphics gfx)
         {
-            Brush brush = new SolidBrush(_color);
+            Color bkg = Color.White;
+            Brush brush = new SolidBrush(bkg);
             gfx.FillRectangle(brush, _x, _y, 1, 1);
         }
 
-        public void Move(int stepX, int stepY)
+        public void Move(int stepX, int stepY, int width, int height)
         {
+            if (_x + stepX < 0) _x = width;
+            if (_x + stepX > width) _x = 1;
+            if (_y + stepY < 0) _y = height;
+            if (_y + stepY > height) _y = 1;
             _x += stepX;
             _y += stepY;
         }
@@ -148,12 +147,12 @@ namespace oop_lab1
     }
 
 
-    // Отрезок
+    //Отрезок
     class tLine: tPoint
     {
-        private int _x2;
-        private int _y2;    // конец отрезка
-        private int _width;    // толщина линии
+        private int _x2 = 0;
+        private int _y2 = 0;    // конец отрезка
+        private int _width = 1;    // толщина линии
         private bool _stop;
 
         // конструкторы
@@ -164,12 +163,7 @@ namespace oop_lab1
             _width = width;
         }
 
-        public tLine(): base (0,0,Color.Black)
-        {
-            _x2 = 0;
-            _y2 = 0;
-            _width = 1;
-        }
+        public tLine(): base (0,0,Color.Black){ }
 
         // методы установки и получения параметров 
 
@@ -223,12 +217,12 @@ namespace oop_lab1
         //Метод рисования линии
         public void DrawLine(Graphics gfx)
         {
-            Pen pen = new Pen(getColor(), _width);
+            Pen pen = new Pen(getColor(), getWidth());
             gfx.DrawLine(pen, getX(), getY(), getX2(), getY2());
         }
 
         // Метод стиания линии
-        public void Hide(Graphics gfx)
+        private void HideLine(Graphics gfx)
         {
             Pen pen = new Pen(Color.White, _width);
             gfx.DrawLine(pen, getX(), getY(), getX2(), getY2());
@@ -236,7 +230,7 @@ namespace oop_lab1
 
         public void  MoveLine(int stepX, int stepY)
         {
-            setX(getX()+stepX);
+            setX(getX() + stepX);
             setY(getY() + stepY);
             setX2(getX2() + stepX);
             setY2(getY2() + stepY);         
@@ -311,7 +305,7 @@ namespace oop_lab1
 
             while (!_stop)
             {
-                Hide(gfx);
+                HideLine(gfx);
 
                 if ((getX() + stepX) >= width || (getX() + stepX) <= 0 || (getX2() + stepX) <= 0 || (getX2() + stepX) >= width)
                 {
@@ -331,7 +325,7 @@ namespace oop_lab1
     }
 
 
-    //Класс описывающий треугольник
+    //Треугольник
     class tTriangle : tLine
     {
         private int _x3;
@@ -494,9 +488,7 @@ namespace oop_lab1
     }
 
 
-
-
-    // класс Прямоугольника
+    //Прямоугольник
     class tRectangle: tLine
     {
         private int _x3;
@@ -690,14 +682,11 @@ namespace oop_lab1
     //Окружность
     class tCircle: tPoint
     {
-        private int _r;
-        private int _width;
+        private int _r = 0;
+        private int _width = 0;
+        private bool _stop = false;
 
-        public tCircle() : base(0,0,Color.Black)
-        {
-            _r = 0;
-            _width = 0;
-        }
+        public tCircle() : base(0,0,Color.Black) {}
 
         public tCircle( int x, int y, int r, Color color, int width): base(x, y, color)
         {
@@ -723,11 +712,245 @@ namespace oop_lab1
             if (_width > 0) _width = width;
         }
 
+        public bool getStop()
+        {
+            return _stop;
+        }
+        public void setStop(bool stop)
+        {
+            _stop = stop;
+        }
+
         public void DrawCircle(Graphics gfx)
         {
             Pen pen = new Pen(getColor(), getWidth());
             gfx.DrawEllipse(pen, getX(), getY(), getR(), getR());
         }
+
+        private void HideCircle(Graphics gfx)
+        {
+            Pen pen = new Pen(Color.White, getWidth());
+            gfx.DrawEllipse(pen, getX(), getY(), getR(), getR());
+        }
+
+        public void MoveCircle(int stepX, int stepY)
+        {
+            setX(getX() + stepX);
+            setY(getY() + stepY);
+        }
+
+        public void MoveRndCircle(int width, int height, Graphics gfx)
+        {
+            Random rnd = new Random();
+            setStop(false);
+
+            int stepX = rnd.Next(-2, 2);
+            int stepY = rnd.Next(-2, 2);
+
+            while (!getStop())
+            {
+                HideCircle(gfx);
+
+                if (((getX()+ getR()) > width) || (getX() < 0))
+                {
+                    stepX = -stepX;
+                }
+
+                if (((getY() + getR()) > height) || (getY() < 0))
+                {
+                    stepY = -stepY;
+                }
+
+                setX(getX() + stepX);
+                setY(getY() + stepY);
+
+                DrawCircle(gfx);
+                Application.DoEvents();
+                Thread.Sleep(3);
+            }
+        }
+
+        public void MoveKeysCircle(Keys key, int width, int height, Graphics gfx)
+        {
+            const int h = 5; // скорость движения
+            HideCircle(gfx);
+            switch (key)
+            {
+                case Keys.Up:
+                    {
+                        if ( (getY() - h) <= 0)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            setY(getY() - h);
+                        }
+                        break;
+                    }
+                case Keys.Down:
+                    {
+                        if ((getY() + getR() + h) >= height)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            setY(getY() + h);
+                        }
+                        break;
+                    }
+                case Keys.Left:
+                    {
+                        if ((getX() - h) <= 0)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            setX(getX() - h);
+                        }
+                        break;
+                    }
+                case Keys.Right:
+                    {
+                        if ((getX() + getR() + h) >= width)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            setX(getX() + h);
+                        }
+                        break;
+                    }
+            }
+            DrawCircle(gfx);
+        }
+    }
+
+
+    //Эллипс
+    class tEllipse: tCircle
+    {
+        private int _r2 = 0;
+
+        public tEllipse() : base() { }
+        public tEllipse(int x, int y, int r, int r2, Color color, int width) : base(x, y, r, color, width)
+        {
+            _r2 = r2;
+        }
+
+        public int getR2()
+        {
+            return _r2;
+        }
+        public void setR2(int r2)
+        {
+            _r2 = r2;
+        }
+
+        public void DrawEllipse(Graphics gfx)
+        {
+            Pen pen = new Pen(getColor(), getWidth());
+            gfx.DrawEllipse(pen, getX(), getY(), getR(), getR2());
+        }
+
+        private void HideEllipse(Graphics gfx)
+        {
+            Pen pen = new Pen(Color.White, getWidth());
+            gfx.DrawEllipse(pen, getX(), getY(), getR(), getR2());
+        }
+
+        public void MoveRndEllipse(int width, int height, Graphics gfx)
+        {
+            Random rnd = new Random();
+            setStop(false);
+
+            int stepX = rnd.Next(-2, 2);
+            int stepY = rnd.Next(-2, 2);
+
+            while (!getStop())
+            {
+                HideEllipse(gfx);
+
+                if (((getX() + getR()) > width) || (getX() < 0))
+                {
+                    stepX = -stepX;
+                }
+
+                if (((getY() + getR2()) > height) || (getY() < 0))
+                {
+                    stepY = -stepY;
+                }
+
+                setX(getX() + stepX);
+                setY(getY() + stepY);
+
+                DrawEllipse(gfx);
+                Application.DoEvents();
+                Thread.Sleep(3);
+            }
+        }
+
+        public void MoveKeysEllipse(Keys key, int width, int height, Graphics gfx)
+        {
+            const int h = 5; // скорость движения
+            HideEllipse(gfx);
+            switch (key)
+            {
+                case Keys.Up:
+                    {
+                        if ((getY() - h) <= 0)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            setY(getY() - h);
+                        }
+                        break;
+                    }
+                case Keys.Down:
+                    {
+                        if ((getY() + getR2() + h) >= height)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            setY(getY() + h);
+                        }
+                        break;
+                    }
+                case Keys.Left:
+                    {
+                        if ((getX() - h) <= 0)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            setX(getX() - h);
+                        }
+                        break;
+                    }
+                case Keys.Right:
+                    {
+                        if ((getX() + getR() + h) >= width)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            setX(getX() + h);
+                        }
+                        break;
+                    }
+            }
+            DrawEllipse(gfx);
+        }
+
     }
    
 }
