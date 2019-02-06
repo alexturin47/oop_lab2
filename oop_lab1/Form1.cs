@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Threading;
 
-namespace oop_lab1
+namespace oop_lab2
 {
     
     public partial class mainform : Form
@@ -17,54 +18,79 @@ namespace oop_lab1
         private tCircle circle;
         private tEllipse ellips;
         public Color bgColor;
-        
+        private bool stop = true;
 
+        private const int FG_LENGTH = 400;
+        private const int FG_HEIGHT = 200;
+        private const int h = 5; // скорость перемещения стрелками
+        
         public mainform()
         {
             InitializeComponent();           
         }
 
+
+        private void mainform_Load(object sender, EventArgs e)
+        {
+            bgColor = Color.White;
+        }
+
         private void mainform_Shown(object sender, EventArgs e)
         {
             bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            g = Graphics.FromImage(bitmap);
-            //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g = Graphics.FromImage(bitmap);          
         }
 
         private void mainform_KeyDown(object sender, KeyEventArgs e)
         {
+            int stepX = 0;
+            int stepY = 0;
+
             if (comboBox1.SelectedIndex == -1) return;
+
+            switch (e.KeyCode)
+            {
+                case Keys.Up: { stepY = -h; break; }
+                case Keys.Down: { stepY = h; break; }
+                case Keys.Left: { stepX = -h; break; }
+                case Keys.Right: { stepX = h; break; }
+            }
 
             switch (comboBox1.SelectedItem.ToString())
             {
                 case "Отрезок":
                     {
-                        if (line == null) return;
-                        line.MoveKeys(e.KeyCode,pictureBox1.Width, pictureBox1.Height, g);
+                        line.HideLine(g, pictureBox1.BackColor);
+                        line.MoveLine(stepX, stepY);
+                        line.DrawLine(g);
                         break;
                     }
                 case "Треугольник":
                     {
-                        if (triangle == null) return;
-                        triangle.MoveKeysTriangle(e.KeyCode, pictureBox1.Width, pictureBox1.Height, g);
+                        triangle.HideTriangle(g);
+                        triangle.MoveTriangle(stepX, stepY);
+                        triangle.DrawTriangle(g);
                         break;
                     }
                 case "Прямоугольник":
                     {
-                        if (rectangle == null) return;
-                        rectangle.MoveKeysRectangle(e.KeyCode, pictureBox1.Width, pictureBox1.Height, g);
+                        rectangle.HideRectangle(g);
+                        rectangle.MoveRectangle(stepX, stepY);
+                        rectangle.DrawRectangle(g);
                         break;
                     }
                 case "Окружность":
                     {
-                        if (circle == null) return;
-                        circle.MoveKeysCircle(e.KeyCode, pictureBox1.Width, pictureBox1.Height, g);
+                        circle.HideCircle(g);
+                        circle.MoveCircle(stepX, stepY);
+                        circle.DrawCircle(g);
                         break;
                     }
                 case "Эллипс":
                     {
-                        if (ellips == null) return;
-                        ellips.MoveKeysEllipse(e.KeyCode, pictureBox1.Width, pictureBox1.Height, g);
+                        ellips.HideEllipse(g);
+                        ellips.MoveCircle(stepX, stepY);
+                        ellips.DrawEllipse(g);
                         break;
                     }
             }
@@ -72,18 +98,7 @@ namespace oop_lab1
             
         }
 
-        private void buttonClose_Click(object sender, EventArgs e)
-        {
-            Application.Exit();          
-        }
-
         private void comboBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Right || e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)
-                e.IsInputKey = true;
-        }
-
-        private void buttonDraw_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Right || e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)
                 e.IsInputKey = true;
@@ -95,7 +110,7 @@ namespace oop_lab1
                 e.IsInputKey = true;
         }
 
-        private void buttonArrowMove_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void buttonStopMove_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Right || e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)
                 e.IsInputKey = true;
@@ -107,72 +122,10 @@ namespace oop_lab1
                 e.IsInputKey = true;
         }
 
-        private void buttonDraw_Click(object sender, EventArgs e)
+        private void lineWidth_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            if (comboBox1.SelectedIndex == -1)
-            {
-                MessageBox.Show("Сначала выбериет фигуру для рисования");
-                return;
-            }
-
-            switch (comboBox1.SelectedItem.ToString())
-            {
-                case "Отрезок":
-                    {
-                        line = new tLine(Int32.Parse(textBox1.Text), Int32.Parse(textBox2.Text), Int32.Parse(textBox3.Text), 
-                            Int32.Parse(textBox4.Text), panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        g.Clear(bgColor);
-                        line.DrawLine(g);                     
-                        break;
-                    }
-                case "Треугольник":
-                    {
-                        triangle = new tTriangle(Int32.Parse(textBox1.Text), Int32.Parse(textBox2.Text), Int32.Parse(textBox3.Text),
-                            Int32.Parse(textBox4.Text), Int32.Parse(textBox5.Text), Int32.Parse(textBox6.Text), 
-                            panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        g.Clear(bgColor);
-                        triangle.DrawTriangle(g);
-                        break;
-                    }
-                case "Прямоугольник":
-                    {
-                        rectangle = new tRectangle(Int32.Parse(textBox1.Text), Int32.Parse(textBox2.Text), Int32.Parse(textBox3.Text),
-                            Int32.Parse(textBox4.Text), Int32.Parse(textBox5.Text), Int32.Parse(textBox6.Text),
-                            panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        g.Clear(bgColor);
-                        rectangle.DrawRectangle(g);
-                        break;
-                    }
-                case "Окружность":
-                    {
-                        int r = Int32.Parse(textBox3.Text);
-                        int x = Int32.Parse(textBox1.Text);
-                        int y = Int32.Parse(textBox2.Text);
-                        int width = pictureBox1.Width;
-                        if (x + r > width) r = width - x;
-                        if (x - r < 0) r = x;
-                        if (y + r > pictureBox1.Height) r = pictureBox1.Height - y;
-                        if (y + r < 0) r = y;
-                        textBox3.Text = r.ToString();
-                        circle = new tCircle((Int32.Parse(textBox1.Text) - Int32.Parse(textBox3.Text)), 
-                            (Int32.Parse(textBox2.Text) - Int32.Parse(textBox3.Text)),
-                            Int32.Parse(textBox3.Text), panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        g.Clear(bgColor);
-                        circle.DrawCircle(g);
-                        break;
-                    }
-                case "Эллипс":
-                    {
-                        ellips = new tEllipse((Int32.Parse(textBox1.Text) - Int32.Parse(textBox3.Text)), 
-                            (Int32.Parse(textBox2.Text) - Int32.Parse(textBox4.Text)),
-                            Int32.Parse(textBox3.Text), Int32.Parse(textBox4.Text), panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        g.Clear(bgColor);
-                        ellips.DrawEllipse(g);
-                        break;
-                    }
-                
-            }
-            
+            if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Right || e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)
+                e.IsInputKey = true;
         }
 
         private void panel1_Click(object sender, EventArgs e)
@@ -192,82 +145,66 @@ namespace oop_lab1
 
         private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            labelDop.Visible = false;
-            textBox5.Enabled = false;
-            textBox6.Enabled = false;
+            if ( panel1.BackColor == pictureBox1.BackColor)
+            {
+                MessageBox.Show("Сначала выберите цвет фигуры и толщину линии");
+                comboBox1.SelectedIndex = -1;
+                return;
+            }
+            int halfWidth = pictureBox1.Width / 2;
+            int halfHeight = pictureBox1.Height / 2;
 
+            g.Clear(bgColor);
             switch (comboBox1.SelectedItem.ToString())
             {
                 case "Отрезок":
                     {
-                        labelStart.Text = "Начало";
-                        labelEnd.Text = "Конец";
+                        line = new tLine(halfWidth - FG_LENGTH / 2, halfHeight, halfWidth + FG_LENGTH / 2, halfHeight, 
+                            panel1.BackColor, Convert.ToInt32(lineWidth.Value));
+                        line.DrawLine(g);
                         break;
                     }
-                case "Окружность":
-                    {
-                        labelStart.Text = "Центр окружности";
-                        labelEnd.Text = "Радиус";
-                        textBox4.Visible = false;
-                        label6.Visible = false;
-                        label5.Text = "R";
-                        break;
-                    }
-                case "Эллипс":
-                    {
-                        labelStart.Text = "Фокус эллипса";
-                        labelEnd.Text = "Радиусы";
-                        labelDop.Visible = false;
-                        labelDop.Visible = true;
-                        textBox4.Visible = true;
-                        label5.Text = "R1";
-                        label6.Visible = true;
-                        label6.Text = "R2";
-                        textBox5.Enabled = false;
-                        textBox6.Enabled = false;
-                        break;
-                    }
+
                 case "Треугольник":
                     {
-                        labelStart.Text = "Первая вершина";
-                        labelEnd.Text = "Вторая вершина";
-                        labelDop.Text = "Третья вершина";
-                        labelDop.Visible = true;
-                        textBox5.Enabled = true;
-                        textBox6.Enabled = true;
+                        triangle = new tTriangle(halfWidth - FG_LENGTH /2 , halfHeight, halfWidth, halfHeight - FG_HEIGHT, 
+                            halfWidth + FG_LENGTH /2, halfHeight, panel1.BackColor, Convert.ToInt32(lineWidth.Value));
+                        triangle.DrawTriangle(g);
                         break;
                     }
                 case "Прямоугольник":
                     {
-                        labelStart.Text = "Первая вершина";
-                        labelEnd.Text = "Вторая вершина";
-                        labelDop.Text = "Третья вершина";
-                        labelDop.Visible = true;
-                        textBox5.Enabled = true;
-                        textBox6.Enabled = true;
-                        textBox3.Text = "600";
-                        textBox4.Text = "200";
-                        textBox5.Text = "600";
-                        textBox6.Text = "350";
+                        rectangle = new tRectangle(halfWidth - FG_LENGTH / 2, halfHeight - FG_HEIGHT / 2 , 
+                                                    halfWidth + FG_LENGTH / 2, halfHeight - FG_HEIGHT /2,
+                                                    halfWidth + FG_LENGTH / 2, halfHeight + FG_HEIGHT / 2,
+                                                    panel1.BackColor, Convert.ToInt32(lineWidth.Value));
+                        rectangle.DrawRectangle(g);
                         break;
                     }
+                case "Окружность":
+                    {
+                        circle = new tCircle(halfWidth - FG_HEIGHT / 2, halfHeight - FG_HEIGHT / 2, FG_HEIGHT,  
+                                                panel1.BackColor, Convert.ToInt32(lineWidth.Value));
+                        circle.DrawCircle(g);
+                        break;
+                    }
+                case "Эллипс":
+                    {
+                        ellips = new tEllipse(halfWidth - FG_LENGTH / 2, halfHeight - FG_HEIGHT / 2, 
+                                                FG_LENGTH, FG_HEIGHT, panel1.BackColor, Convert.ToInt32(lineWidth.Value));
+                        ellips.DrawEllipse(g);
+                        break;
+                    }
+                    
             }
+            pictureBox1.Focus();
         }
 
-        private void mainform_Load(object sender, EventArgs e)
-        {
-            bgColor = Color.White;
-            textBox1.Text = (pictureBox1.Width / 2).ToString();
-            textBox2.Text = (pictureBox1.Height / 2).ToString();
-        }
+
 
         private void buttonStopMove_Click(object sender, EventArgs e)
         {
-            if (line != null) line.setStop(true);
-            if (triangle != null) triangle.setStop(true);
-            if (rectangle != null) rectangle.setStop(true);
-            if (circle != null) circle.setStop(true);
-            if (ellips != null) ellips.setStop(true);
+            stop = true;
             buttonRandomMove.Text = "Случайное перемещение";
             buttonStopMove.Enabled = false;
         }
@@ -282,54 +219,137 @@ namespace oop_lab1
 
             buttonRandomMove.Text = "Сменить направление";
             buttonStopMove.Enabled = true;
+
+            int width = pictureBox1.Width;
+            int height = pictureBox1.Height;
+
+            Random rnd = new Random();
+            int stepX = rnd.Next(-3, 3);
+            int stepY = rnd.Next(-3, 3);
+
+            stop = false;
             switch (comboBox1.SelectedItem.ToString())
             {
                 case "Отрезок":
                     {
-                        if (line != null)
+                        while (!stop)
                         {
-                            line.setStop(false);
-                            line.MoveRnd(g, pictureBox1.Width, pictureBox1.Height);
+                            if ((line.getX() + stepX) >= width || (line.getX() + stepX) <= 0 || (line.getX2() + stepX) <= 0 || (line.getX2() + stepX) >= width)
+                            {
+                                stepX = -stepX;
+                            }
+
+                            if ((line.getY() + stepY) >= height || (line.getY() + stepY) <= 0 || (line.getY2() + stepY) <= 0 || (line.getY2() + stepY) >= height)
+                            {
+                                stepY = -stepY;
+                            }
+
+                            line.HideLine(g, pictureBox1.BackColor);
+                            line.MoveLine(stepX, stepY);
+                            line.DrawLine(g);
+                            Application.DoEvents();
+                            Thread.Sleep(1);
                         }
+
                         break;
                     }
                 case "Треугольник":
                     {
-                        if (triangle != null)
+
+                        while (!stop)
                         {
-                            triangle.setStop(false);
-                            triangle.MoveRndTriangle(g, pictureBox1.Width, pictureBox1.Height);
+                            if ((triangle.getX() > Width) || (triangle.getX2() > Width) || (triangle.getX3() > Width)
+                                    || (triangle.getX() < 0) || (triangle.getX2() < 0) || (triangle.getX3() < 0))
+                            {
+                                stepX = -stepX;
+                            }
+
+                            if ((triangle.getY() > Height) || (triangle.getY2() > Height) || (triangle.getY3() > Height) 
+                                || (triangle.getY() < 0) || (triangle.getY2() < 0) || (triangle.getY3() < 0))
+                            {
+                                stepY = -stepY;
+                            }
+                            triangle.HideTriangle(g);
+                            triangle.MoveTriangle(stepX, stepY);
+                            triangle.DrawTriangle(g);
+                            Application.DoEvents();
+                            Thread.Sleep(1);
                         }
+
+                        
                         break;
                     }
                 case "Прямоугольник":
                     {
-                        if (rectangle != null)
+                        while (!stop)
                         {
-                            rectangle.setStop(false);
-                            rectangle.MoveRndRectangle(g, pictureBox1.Width, pictureBox1.Height);
+                            if ((rectangle.getX() > Width) || (rectangle.getX2() > Width) || (rectangle.getX3() > Width) 
+                                || (rectangle.getX4() > Width) || (rectangle.getX() < 0) || (rectangle.getX2() < 0) 
+                                || (rectangle.getX3() < 0) || (rectangle.getX4() < 0))
+                            {
+                                stepX = -stepX;
+                            }
+
+                            if ((rectangle.getY() > Height) || (rectangle.getY2() > Height) || (rectangle.getY3() > Height) 
+                                || (rectangle.getY4() > Height) || (rectangle.getY() < 0) || (rectangle.getY2() < 0) 
+                                || (rectangle.getY3() < 0) || (rectangle.getY4() < 0))
+                            {
+                                stepY = -stepY;
+                            }
+
+                            rectangle.HideRectangle(g);
+                            rectangle.MoveRectangle(stepX, stepY);
+                            rectangle.DrawRectangle(g);
+                            Application.DoEvents();
+                            Thread.Sleep(1);
                         }
                         break;
                     }
                 case "Окружность":
                     {
-                        if (circle != null)
+                        while(!stop)
                         {
-                            circle.setStop(false);
-                            circle.MoveRndCircle(pictureBox1.Width, pictureBox1.Height, g);
+                            if (((circle.getX() + circle.getR()) > width) || (circle.getX() < 0))
+                            {
+                                stepX = -stepX;
+                            }
+
+                            if (((circle.getY() + circle.getR()) > height) || (circle.getY() < 0))
+                            {
+                                stepY = -stepY;
+                            }
+
+                            circle.HideCircle(g);
+                            circle.MoveCircle(stepX, stepY);
+                            circle.DrawCircle(g);
+                            Application.DoEvents();
+                            Thread.Sleep(1);
                         }
                         break;
                     }
                 case "Эллипс":
                     {
-                        if (ellips != null)
+                        while (!stop)
                         {
-                            ellips.setStop(false);
-                            ellips.MoveRndEllipse(pictureBox1.Width, pictureBox1.Height, g);
+                            if (((ellips.getX() + ellips.getR()) > width) || (ellips.getX() < 0))
+                            {
+                                stepX = -stepX;
+                            }
+
+                            if (((ellips.getY() + ellips.getR2()) > height) || (ellips.getY() < 0))
+                            {
+                                stepY = -stepY;
+                            }
+                            ellips.HideEllipse(g);
+                            ellips.MoveCircle(stepX, stepY);
+                            ellips.DrawEllipse(g);
+                            Application.DoEvents();
+                            Thread.Sleep(1);
                         }
                         break;
                     }
             }
+            
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -337,55 +357,9 @@ namespace oop_lab1
             pictureBox1.Image = bitmap;
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void buttonClose_Click(object sender, EventArgs e)
         {
-            ValidatePoint();
-        }
-
-        private void textBox4_TextChanged(object sender, EventArgs e)
-        {
-            ValidatePoint();
-        }
-
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-            ValidatePoint();
-        }
-
-        private void textBox5_TextChanged(object sender, EventArgs e)
-        {
-            ValidatePoint();
-        }
-
-        private void ValidatePoint()
-        {
-            if (comboBox1.SelectedIndex == -1) return;
-            switch (comboBox1.SelectedItem.ToString())
-            {
-                case "Прямоугольник":
-                    {
-                        textBox4.Text = textBox2.Text;
-                        textBox2.Text = textBox4.Text;
-                        textBox5.Text = textBox3.Text;
-                        textBox3.Text = textBox5.Text;
-                        break;
-                    }
-                default: break;
-            }
-
-        }
-
-        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
-        {
-            int cursorX = Cursor.Position.X;
-            int cursorY = Cursor.Position.Y - 77;
-            labelCursor.Text = "Позиция курсора: X = " + cursorX + "; Y = " + cursorY;
-        }
-
-        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
-        {
-            coordX = e.X;
-            coordY = e.Y;
+            Application.Exit();
         }
     }
 }

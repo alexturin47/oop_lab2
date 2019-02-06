@@ -1,4 +1,4 @@
-﻿namespace oop_lab1
+﻿namespace oop_lab2
 {
     partial class mainform
     {
@@ -77,7 +77,7 @@
             this.buttonStopMove.Text = "Стоп";
             this.buttonStopMove.UseVisualStyleBackColor = true;
             this.buttonStopMove.Click += new System.EventHandler(this.buttonStopMove_Click);
-            this.buttonStopMove.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.buttonArrowMove_PreviewKeyDown);
+            this.buttonStopMove.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.buttonStopMove_PreviewKeyDown);
             // 
             // comboBox1
             // 
@@ -92,8 +92,10 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(189, 21);
             this.comboBox1.TabIndex = 9;
+            this.comboBox1.TabStop = false;
             this.comboBox1.Text = "Выберите фигуру";
             this.comboBox1.SelectionChangeCommitted += new System.EventHandler(this.comboBox1_SelectionChangeCommitted);
+            this.comboBox1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.comboBox1_PreviewKeyDown);
             // 
             // panel1
             // 
@@ -127,6 +129,7 @@
             // 
             // lineWidth
             // 
+            this.lineWidth.InterceptArrowKeys = false;
             this.lineWidth.Location = new System.Drawing.Point(361, 14);
             this.lineWidth.Maximum = new decimal(new int[] {
             10,
@@ -141,11 +144,13 @@
             this.lineWidth.Name = "lineWidth";
             this.lineWidth.Size = new System.Drawing.Size(38, 20);
             this.lineWidth.TabIndex = 13;
+            this.lineWidth.TabStop = false;
             this.lineWidth.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
+            this.lineWidth.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.lineWidth_PreviewKeyDown);
             // 
             // label3
             // 
@@ -167,13 +172,11 @@
             this.pictureBox1.Size = new System.Drawing.Size(867, 440);
             this.pictureBox1.TabIndex = 15;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
-            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             // 
             // timer1
             // 
             this.timer1.Enabled = true;
-            this.timer1.Interval = 60;
+            this.timer1.Interval = 24;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // mainform
