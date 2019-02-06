@@ -61,35 +61,35 @@ namespace oop_lab2
                 case "Отрезок":
                     {
                         line.HideLine(g, pictureBox1.BackColor);
-                        line.MoveLine(stepX, stepY);
+                        line.Move(stepX, stepY);
                         line.DrawLine(g);
                         break;
                     }
                 case "Треугольник":
                     {
                         triangle.HideTriangle(g);
-                        triangle.MoveTriangle(stepX, stepY);
+                        triangle.Move(stepX, stepY);
                         triangle.DrawTriangle(g);
                         break;
                     }
                 case "Прямоугольник":
                     {
                         rectangle.HideRectangle(g);
-                        rectangle.MoveRectangle(stepX, stepY);
+                        rectangle.Move(stepX, stepY);
                         rectangle.DrawRectangle(g);
                         break;
                     }
                 case "Окружность":
                     {
                         circle.HideCircle(g);
-                        circle.MoveCircle(stepX, stepY);
+                        circle.Move(stepX, stepY);
                         circle.DrawCircle(g);
                         break;
                     }
                 case "Эллипс":
                     {
                         ellips.HideEllipse(g);
-                        ellips.MoveCircle(stepX, stepY);
+                        ellips.Move(stepX, stepY);
                         ellips.DrawEllipse(g);
                         break;
                     }
@@ -234,18 +234,18 @@ namespace oop_lab2
                     {
                         while (!stop)
                         {
-                            if ((line.getX() + stepX) >= width || (line.getX() + stepX) <= 0 || (line.getX2() + stepX) <= 0 || (line.getX2() + stepX) >= width)
+                            if ((line.getX(0) + stepX) >= width || (line.getX(0) + stepX) <= 0 || (line.getX(1) + stepX) <= 0 || (line.getX(1) + stepX) >= width)
                             {
                                 stepX = -stepX;
                             }
 
-                            if ((line.getY() + stepY) >= height || (line.getY() + stepY) <= 0 || (line.getY2() + stepY) <= 0 || (line.getY2() + stepY) >= height)
+                            if ((line.getY(0) + stepY) >= height || (line.getY(0) + stepY) <= 0 || (line.getY(1) + stepY) <= 0 || (line.getY(1) + stepY) >= height)
                             {
                                 stepY = -stepY;
                             }
 
                             line.HideLine(g, pictureBox1.BackColor);
-                            line.MoveLine(stepX, stepY);
+                            line.Move(stepX, stepY);
                             line.DrawLine(g);
                             Application.DoEvents();
                             Thread.Sleep(1);
@@ -258,19 +258,19 @@ namespace oop_lab2
 
                         while (!stop)
                         {
-                            if ((triangle.getX() > Width) || (triangle.getX2() > Width) || (triangle.getX3() > Width)
-                                    || (triangle.getX() < 0) || (triangle.getX2() < 0) || (triangle.getX3() < 0))
+                            if ((triangle.getX(0) > Width) || (triangle.getX(1) > Width) || (triangle.getX(2) > Width)
+                                    || (triangle.getX(0) < 0) || (triangle.getX(1) < 0) || (triangle.getX(2) < 0))
                             {
                                 stepX = -stepX;
                             }
 
-                            if ((triangle.getY() > Height) || (triangle.getY2() > Height) || (triangle.getY3() > Height) 
-                                || (triangle.getY() < 0) || (triangle.getY2() < 0) || (triangle.getY3() < 0))
+                            if ((triangle.getY(0) > Height) || (triangle.getY(1) > Height) || (triangle.getY(2) > Height) 
+                                || (triangle.getY(0) < 0) || (triangle.getY(1) < 0) || (triangle.getY(2) < 0))
                             {
                                 stepY = -stepY;
                             }
                             triangle.HideTriangle(g);
-                            triangle.MoveTriangle(stepX, stepY);
+                            triangle.Move(stepX, stepY);
                             triangle.DrawTriangle(g);
                             Application.DoEvents();
                             Thread.Sleep(1);
@@ -283,22 +283,22 @@ namespace oop_lab2
                     {
                         while (!stop)
                         {
-                            if ((rectangle.getX() > Width) || (rectangle.getX2() > Width) || (rectangle.getX3() > Width) 
-                                || (rectangle.getX4() > Width) || (rectangle.getX() < 0) || (rectangle.getX2() < 0) 
-                                || (rectangle.getX3() < 0) || (rectangle.getX4() < 0))
+                            if ((rectangle.getX(0) > Width) || (rectangle.getX(1) > Width) || (rectangle.getX(2) > Width) 
+                                || (rectangle.getX(3) > Width) || (rectangle.getX(0) < 0) || (rectangle.getX(1) < 0) 
+                                || (rectangle.getX(2) < 0) || (rectangle.getX(3) < 0))
                             {
                                 stepX = -stepX;
                             }
 
-                            if ((rectangle.getY() > Height) || (rectangle.getY2() > Height) || (rectangle.getY3() > Height) 
-                                || (rectangle.getY4() > Height) || (rectangle.getY() < 0) || (rectangle.getY2() < 0) 
-                                || (rectangle.getY3() < 0) || (rectangle.getY4() < 0))
+                            if ((rectangle.getY(0) > Height) || (rectangle.getY(1) > Height) || (rectangle.getY(2) > Height) 
+                                || (rectangle.getY(3) > Height) || (rectangle.getY(0) < 0) || (rectangle.getY(1) < 0) 
+                                || (rectangle.getY(2) < 0) || (rectangle.getY(3) < 0))
                             {
                                 stepY = -stepY;
                             }
 
                             rectangle.HideRectangle(g);
-                            rectangle.MoveRectangle(stepX, stepY);
+                            rectangle.Move(stepX, stepY);
                             rectangle.DrawRectangle(g);
                             Application.DoEvents();
                             Thread.Sleep(1);
@@ -309,18 +309,18 @@ namespace oop_lab2
                     {
                         while(!stop)
                         {
-                            if (((circle.getX() + circle.getR()) > width) || (circle.getX() < 0))
+                            if (((circle.getX(0) + circle.getR()) > width) || (circle.getX(0) < 0))
                             {
                                 stepX = -stepX;
                             }
 
-                            if (((circle.getY() + circle.getR()) > height) || (circle.getY() < 0))
+                            if (((circle.getY(0) + circle.getR()) > height) || (circle.getY(0) < 0))
                             {
                                 stepY = -stepY;
                             }
 
                             circle.HideCircle(g);
-                            circle.MoveCircle(stepX, stepY);
+                            circle.Move(stepX, stepY);
                             circle.DrawCircle(g);
                             Application.DoEvents();
                             Thread.Sleep(1);
@@ -331,17 +331,17 @@ namespace oop_lab2
                     {
                         while (!stop)
                         {
-                            if (((ellips.getX() + ellips.getR()) > width) || (ellips.getX() < 0))
+                            if (((ellips.getX(0) + ellips.getR()) > width) || (ellips.getX(0) < 0))
                             {
                                 stepX = -stepX;
                             }
 
-                            if (((ellips.getY() + ellips.getR2()) > height) || (ellips.getY() < 0))
+                            if (((ellips.getY(0) + ellips.getR2()) > height) || (ellips.getY(0) < 0))
                             {
                                 stepY = -stepY;
                             }
                             ellips.HideEllipse(g);
-                            ellips.MoveCircle(stepX, stepY);
+                            ellips.Move(stepX, stepY);
                             ellips.DrawEllipse(g);
                             Application.DoEvents();
                             Thread.Sleep(1);
