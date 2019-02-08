@@ -2,101 +2,132 @@
 using System.Collections.Generic;
 
 namespace oop_lab2
-{
-    class tPoint
+{   
+    abstract class tFigure
     {
-        private Color _color = Color.Black;
+        private Color _color;
+        private int _width;
+
+        public tFigure()
+        {
+            Color = Color.Black;
+            Width = 0;
+        }
+
+        public tFigure(Color clr, int width)
+        {
+            Color = clr;
+            Width = width;
+        }
+
+        public Color Color
+        {
+            get { return _color; }
+            set { _color = value; }
+        }
+        public int Width
+        {
+            get { return _width; }
+            set { if (value >= 0) _width = value; }
+        }
+
+        public abstract void Draw(Graphics gfx);
+        public abstract void Hide(Graphics gfx, Color bg);
+        public abstract void Move(int stepX, int stepY);
+
+    }
+
+    class tPoint : tFigure
+    {
         private int _x = 0;
         private int _y = 0;
-        private int _size = 1;
-        private List<int[]> xy = new List<int[]>(); 
 
         // конструкторы
-        public tPoint()
-        {
-            int[] crd = new int[2] { 0,0};
-            xy.Add(crd); 
-        }
+        public tPoint() { }
 
-        public tPoint(int x, int y, Color color, int size) // со всеми параметрами
+        public tPoint(int x, int y) 
         {
-            int[] crd = new int[2];
-            crd[0] = x;
-            crd[1] = y;
-            xy.Add(crd);
-            _x = x;
-            _y = y;
-            _color = color;
-            _size = size;
+            X = x;
+            Y = y;
         }
-
-        public void setPoint( int x, int y)
+        
+        public int X
         {
-            int[] crd = new int[2];
-            crd[0] = x;
-            crd[1] = y;
-            xy.Add(crd);
-        }
-
-        public Color getColor()
-        {
-            return _color;
-        }
-        public void setColor(Color color)
-        {
-            _color = color;
-        }
-
-        public int getSize()
-        {
-            return _size;
-        }
-
-        public void setSize(int size)
-        {
-            if (size > 0) _size = size;
-        }
-
-        public virtual void Move(int stepX, int stepY)
-        {
-            foreach( int[] pt in xy)
-            {
-                pt[0] += stepX;
-                pt[1] += stepY;
+            get { return _x; }
+            set {
+                if (value >= 0) _x = value;
             }
         }
-
-        public int getX(int i)
+        public int Y
         {
-            return xy[i][0];
+            get { return _y; }
+            set
+            {
+                if (value >= 0) _y = value;
+            }
         }
-        public int getY(int i)
+        
+
+        public override void Draw(Graphics gfx)
         {
-            return xy[i][1];
+            throw new System.NotImplementedException();
+        }
+        public override void Hide(Graphics gfx, Color bg)
+        {
+            throw new System.NotImplementedException();
+        }
+        public override void Move(int stepX, int stepY)
+        {
+            X += stepX;
+            Y += stepY;
         }
 
     }
 
 
     //Отрезок
-    class tLine: tPoint
+    class tLine: tFigure
     {
-        //private int _x2 = 0;
-        //private int _y2 = 0;    // конец отрезка
+        public tPoint A { get; set; }
+        public tPoint B { get; set; }
 
         // конструкторы
-        public tLine(int x, int y, int x2, int y2, Color color, int size) : base(x, y, color, size)
+        public tLine(int x1, int y1, int x2, int y2, Color color, int size) : base(color,size)
         {
-            setPoint(x2, y2);
-          //  _x2 = x2;
-          //  _y2 = y2;
+            A = new tPoint(x1, y1);
+            B = new tPoint(x2, y2);
         }
 
-        public tLine(): base (0,0,Color.Black, 1)
+        public tLine() : base()
         {
-            setPoint(0, 0);
+            A = new tPoint(0,0);
+            B = new tPoint(0,0);
         }
 
+       /* public int x1
+        {
+            get { return _a.X; }
+            set { _a.X = value; }
+        }
+
+        public int y1
+        {
+            get { return _a.Y; }
+            set { _a.Y = value; }
+        }
+
+        public int x2
+        {
+            get { return _a.X; }
+            set { _a.X = value; }
+        }
+
+        public int y2
+        {
+            get { return _b.Y; }
+            set { _b.Y = value; }
+        }
+        */
         // методы установки и получения параметров 
 
         /*public int getX2()
@@ -119,17 +150,24 @@ namespace oop_lab2
         */
 
         //Метод рисования линии
-        public void DrawLine(Graphics gfx)
+        public override void Draw(Graphics gfx)
         {
-            Pen pen = new Pen(getColor(), getSize());
-            gfx.DrawLine(pen, getX(0), getY(0), getX(1), getY(1));
+            Pen pen = new Pen(Color, Width);
+            gfx.DrawLine(pen,A.X ,A.Y, B.X, B.Y);
         }
 
         // Метод стиания линии
-        public void HideLine(Graphics gfx, Color bg)
+        public override void Hide(Graphics gfx, Color bg)
         {
-            Pen pen = new Pen(bg, getSize());
-            gfx.DrawLine(pen, getX(0), getY(0), getX(1), getY(1));
+            Pen pen = new Pen(bg, Width);
+            gfx.DrawLine(pen, A.X, A.Y, B.X, B.Y);
+        }
+
+        public override void Move(int stepX, int stepY)
+        {
+            A.Move(stepX, stepY);
+            B.Move(stepX, stepY);
+         
         }
 
     }
