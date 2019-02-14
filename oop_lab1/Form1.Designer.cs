@@ -40,6 +40,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.buttonDraw = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.lineWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -59,10 +60,11 @@
             // 
             // buttonRandomMove
             // 
-            this.buttonRandomMove.Location = new System.Drawing.Point(440, 12);
+            this.buttonRandomMove.Location = new System.Drawing.Point(490, 12);
             this.buttonRandomMove.Name = "buttonRandomMove";
             this.buttonRandomMove.Size = new System.Drawing.Size(154, 23);
             this.buttonRandomMove.TabIndex = 5;
+            this.buttonRandomMove.TabStop = false;
             this.buttonRandomMove.Text = "Случаное перемещение";
             this.buttonRandomMove.UseVisualStyleBackColor = true;
             this.buttonRandomMove.Click += new System.EventHandler(this.buttonRandomMove_Click);
@@ -70,7 +72,7 @@
             // 
             // buttonStopMove
             // 
-            this.buttonStopMove.Location = new System.Drawing.Point(600, 12);
+            this.buttonStopMove.Location = new System.Drawing.Point(650, 12);
             this.buttonStopMove.Name = "buttonStopMove";
             this.buttonStopMove.Size = new System.Drawing.Size(48, 23);
             this.buttonStopMove.TabIndex = 6;
@@ -120,17 +122,17 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(269, 16);
+            this.label2.Location = new System.Drawing.Point(257, 16);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(86, 13);
+            this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 12;
-            this.label2.Text = "Толщина линии";
+            this.label2.Text = "Линия";
             this.label2.UseMnemonic = false;
             // 
             // lineWidth
             // 
             this.lineWidth.InterceptArrowKeys = false;
-            this.lineWidth.Location = new System.Drawing.Point(361, 14);
+            this.lineWidth.Location = new System.Drawing.Point(295, 13);
             this.lineWidth.Maximum = new decimal(new int[] {
             10,
             0,
@@ -155,7 +157,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(400, 16);
+            this.label3.Location = new System.Drawing.Point(333, 16);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(18, 13);
             this.label3.TabIndex = 14;
@@ -179,12 +181,24 @@
             this.timer1.Interval = 24;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // buttonDraw
+            // 
+            this.buttonDraw.Location = new System.Drawing.Point(357, 12);
+            this.buttonDraw.Name = "buttonDraw";
+            this.buttonDraw.Size = new System.Drawing.Size(78, 23);
+            this.buttonDraw.TabIndex = 16;
+            this.buttonDraw.TabStop = false;
+            this.buttonDraw.Text = "Нарисовать";
+            this.buttonDraw.UseVisualStyleBackColor = true;
+            this.buttonDraw.Click += new System.EventHandler(this.buttonDraw_Click);
+            // 
             // mainform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(867, 480);
+            this.Controls.Add(this.buttonDraw);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lineWidth);
@@ -225,6 +239,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button buttonDraw;
     }
 }
 

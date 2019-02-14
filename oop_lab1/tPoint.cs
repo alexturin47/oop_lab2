@@ -2,7 +2,18 @@
 
 namespace oop_lab2
 {
-    class tPoint 
+    abstract class tShape
+    {
+        public int stepX { get; set; }
+        public int stepY { get; set; }
+        public abstract void Move();
+        public abstract bool CheckRange(int width, int height);
+        public abstract void Draw(Graphics gfx);
+        public abstract void Hide(Graphics gfx, Color bg);
+
+    }
+
+    class tPoint : tShape
     {
         private Color _color = Color.Black;
         private int _x = 0;
@@ -57,11 +68,31 @@ namespace oop_lab2
             if (size > 0) _size = size;
         }
 
-        public virtual void Move(int stepX, int stepY)
+        public override void Draw(Graphics gfx)
+        {
+            Pen pen = new Pen(getColor(), getSize());
+            gfx.DrawLine(pen, getX(), getY(), getX(), getY());
+        }
+
+        public override void Hide(Graphics gfx, Color bg)
+        {
+            Pen pen = new Pen(bg, getSize());
+            gfx.DrawLine(pen, getX(), getY(), getX(), getY());
+        }
+
+        public override void Move()
         {
             _x += stepX;
             _y += stepY;
         }
+
+        public override bool CheckRange(int width, int height)
+        {
+            if( getX() + stepX > width || getX() + stepX < 0) return false;
+            if (getY() + stepY > height || getY() + stepY < 0) return false;
+            return true;
+        }
+        
 
     }
 
@@ -102,26 +133,35 @@ namespace oop_lab2
         }
 
         //Метод рисования линии
-        public virtual void Draw(Graphics gfx)
+        public override void Draw(Graphics gfx)
         {
             Pen pen = new Pen(getColor(), getSize());
             gfx.DrawLine(pen, getX(), getY(), getX2(), getY2());
         }
 
         // Метод стиания линии
-        public virtual void Hide(Graphics gfx, Color bg)
+        public override void Hide(Graphics gfx, Color bg)
         {
             Pen pen = new Pen(bg, getSize());
             gfx.DrawLine(pen, getX(), getY(), getX2(), getY2());
         }
 
-        public override void  Move(int stepX, int stepY)
+        // движение отрезка
+        public override void  Move()
         {
             setX(getX() + stepX);
             setY(getY() + stepY);
             setX2(getX2() + stepX);
             setY2(getY2() + stepY);         
         }
+
+        public override bool CheckRange(int width, int height)
+        {
+            if (getX() + stepX >= width || getX() + stepX <= 0 || getX2() + stepX <= 0 || getX2() + stepX >= width) return false;
+            if (getY() + stepY >= height || getY() + stepY <= 0 || getY2() + stepY <= 0 || getY2() + stepY >= height) return false;
+            return true;
+        }
+
     }
 
 
@@ -186,7 +226,7 @@ namespace oop_lab2
             }
         }
 
-        public override void Move(int stepX, int stepY)
+        public override void Move()
         {
             setX(getX() + stepX);
             setY(getY() + stepY);
@@ -194,6 +234,17 @@ namespace oop_lab2
             setY2(getY2() + stepY);
             setX3(getX3() + stepX);
             setY3(getY3() + stepY);
+        }
+
+        public override bool CheckRange(int width, int height)
+        {
+            if (getX() + stepX >= width || getX2() + stepX >= width || getX3() + stepX >= width
+                                    || getX() + stepX <= 0 || getX2() + stepX <= 0 || getX3() + stepX <= 0) return false;
+
+            if (getY() + stepY >= height || getY2() + stepY >= height || getY3() + stepY >= height
+                || getY() + stepY <= 0 || getY2() + stepY <= 0 || getY3() + stepY <= 0) return false;
+            return true;
+
         }
 
     }
@@ -281,7 +332,7 @@ namespace oop_lab2
             }
         }
 
-        public override void Move( int stepX, int stepY)
+        public override void Move()
         {
             setX(getX() + stepX);
             setY(getY() + stepY);
@@ -292,7 +343,18 @@ namespace oop_lab2
             setX4(getX4() + stepX);
             setY4(getY4() + stepY);
         }
-        
+
+        public override bool CheckRange(int width, int height)
+        {
+            if (getX()+stepX >= width || getX2() + stepX >= width || getX3() + stepX >= width || getX4() + stepX >= width
+                                    || getX() + stepX <= 0 || getX2() + stepX <= 0 || getX3() + stepX <= 0 || getX4() + stepX <= 0) return false;
+
+            if (getY() + stepY >= height || getY2() + stepY >= height || getY3() + stepY >= height || getY4() + stepY >= height
+                || getY() + stepY <= 0 || getY2() + stepY <= 0 || getY3() + stepY <= 0 || getY4() + stepY <= 0) return false;
+            return true;
+
+        }
+
 
     }
 
@@ -318,23 +380,33 @@ namespace oop_lab2
             if (r > 0) _r = r;
         }
 
-        public virtual void Draw(Graphics gfx)
+        public override void Draw(Graphics gfx)
         {
             Pen pen = new Pen(getColor(), getSize());
             gfx.DrawEllipse(pen, getX(), getY(), getR(), getR());
         }
 
-        public virtual void Hide(Graphics gfx, Color bg)
+        public override void Hide(Graphics gfx, Color bg)
         {
             Pen pen = new Pen(Color.White, getSize());
             gfx.DrawEllipse(pen, getX(), getY(), getR(), getR());
         }
 
-        public override void Move(int stepX, int stepY)
+        public override void Move()
         {
             setX(getX() + stepX);
             setY(getY() + stepY);
         }
+
+        public override bool CheckRange(int width, int height)
+        {
+            if (getX()+stepX + getR() >= width || getX()+stepX <= 0) return false;
+
+            if (getY()+stepY + getR() >= height || getY()+stepY <= 0) return false;
+            return true;
+
+        }
+
     }
 
 
@@ -370,7 +442,15 @@ namespace oop_lab2
             gfx.DrawEllipse(pen, getX(), getY(), getR(), getR2());
         }
 
-        
+        public override bool CheckRange(int width, int height)
+        {
+            if (getX() + stepX + getR() >= width || getX() + stepX <= 0) return false;
+
+            if (getY() + stepY + getR2() >= height || getY() + stepY <= 0) return false;
+            return true;
+
+        }
+
     }
    
 }

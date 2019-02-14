@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace oop_lab2
 {
@@ -17,6 +18,7 @@ namespace oop_lab2
         private tEllipse ellips;
         public Color bgColor;
         private bool stop = true;
+        private List <tShape> fig;
 
         private const int FG_LENGTH = 400;
         private const int FG_HEIGHT = 200;
@@ -28,9 +30,17 @@ namespace oop_lab2
         }
 
 
+        public void rndStep( out int stepX, out int stepY)
+        {
+            Random rnd = new Random();
+            stepX = rnd.Next(-3, 3);
+            stepY = rnd.Next(-3, 3);
+        }
+
         private void mainform_Load(object sender, EventArgs e)
         {
             bgColor = Color.White;
+            fig = new List<tShape>();
         }
 
         private void mainform_Shown(object sender, EventArgs e)
@@ -54,46 +64,46 @@ namespace oop_lab2
                 case Keys.Right: { stepX = h; break; }
             }
 
+            tShape shape;
             switch (comboBox1.SelectedItem.ToString())
             {
                 case "Отрезок":
-                    {
-                        line.Hide(g, pictureBox1.BackColor);
-                        line.Move(stepX, stepY);
-                        line.Draw(g);
-                        break;
+                    { shape = line;
+                      break;
                     }
                 case "Треугольник":
-                    {
-                        triangle.Hide(g, pictureBox1.BackColor);
-                        triangle.Move(stepX, stepY);
-                        triangle.Draw(g);
-                        break;
+                    { shape = triangle;
+                      break;
                     }
+                    
                 case "Прямоугольник":
-                    {
-                        rectangle.Hide(g, pictureBox1.BackColor);
-                        rectangle.Move(stepX, stepY);
-                        rectangle.Draw(g);
-                        break;
+                    { shape = rectangle;
+                      break;
                     }
+                    
                 case "Окружность":
-                    {
-                        circle.Hide(g, pictureBox1.BackColor);
-                        circle.Move(stepX, stepY);
-                        circle.Draw(g);
-                        break;
+                    { shape = circle;
+                      break;
                     }
+                    
                 case "Эллипс":
+                    { shape = ellips;
+                      break;
+                    }
+                default:
                     {
-                        ellips.Hide(g, pictureBox1.BackColor);
-                        ellips.Move(stepX, stepY);
-                        ellips.Draw(g);
+                        shape = line;
                         break;
                     }
+     
             }
-            
-            
+
+            shape.stepX = stepX;
+            shape.stepY = stepY;
+            shape.Hide(g, comboBox1.BackColor);
+            shape.Move();
+            shape.Draw(g);
+    
         }
 
         private void comboBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -143,58 +153,6 @@ namespace oop_lab2
 
         private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if ( panel1.BackColor == pictureBox1.BackColor)
-            {
-                MessageBox.Show("Сначала выберите цвет фигуры и толщину линии");
-                comboBox1.SelectedIndex = -1;
-                return;
-            }
-            int halfWidth = pictureBox1.Width / 2;
-            int halfHeight = pictureBox1.Height / 2;
-
-            g.Clear(bgColor);
-            switch (comboBox1.SelectedItem.ToString())
-            {
-                case "Отрезок":
-                    {
-                        line = new tLine(halfWidth - FG_LENGTH / 2, halfHeight, halfWidth + FG_LENGTH / 2, halfHeight, 
-                            panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        line.Draw(g);
-                        break;
-                    }
-
-                case "Треугольник":
-                    {
-                        triangle = new tTriangle(halfWidth - FG_LENGTH /2 , halfHeight, halfWidth, halfHeight - FG_HEIGHT, 
-                            halfWidth + FG_LENGTH /2, halfHeight, panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        triangle.Draw(g);
-                        break;
-                    }
-                case "Прямоугольник":
-                    {
-                        rectangle = new tRectangle(halfWidth - FG_LENGTH / 2, halfHeight - FG_HEIGHT / 2 , 
-                                                    halfWidth + FG_LENGTH / 2, halfHeight - FG_HEIGHT /2,
-                                                    halfWidth + FG_LENGTH / 2, halfHeight + FG_HEIGHT / 2,
-                                                    panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        rectangle.Draw(g);
-                        break;
-                    }
-                case "Окружность":
-                    {
-                        circle = new tCircle(halfWidth - FG_HEIGHT / 2, halfHeight - FG_HEIGHT / 2, FG_HEIGHT,  
-                                                panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        circle.Draw(g);
-                        break;
-                    }
-                case "Эллипс":
-                    {
-                        ellips = new tEllipse(halfWidth - FG_LENGTH / 2, halfHeight - FG_HEIGHT / 2, 
-                                                FG_LENGTH, FG_HEIGHT, panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        ellips.Draw(g);
-                        break;
-                    }
-                    
-            }
             pictureBox1.Focus();
         }
 
@@ -226,7 +184,50 @@ namespace oop_lab2
             int stepY = rnd.Next(-3, 3);
 
             stop = false;
-            switch (comboBox1.SelectedItem.ToString())
+
+
+            foreach( tShape obj in fig)
+            {
+                do
+                {
+                    stepX = rnd.Next(-3, 3);
+                    stepY = rnd.Next(-3, 3);
+                } while (stepX == 0 && stepY == 0);
+
+
+                    obj.stepX = stepX;
+                obj.stepY = stepY;
+            }
+
+            while (!stop)
+            {
+                g.Clear(pictureBox1.BackColor);
+                foreach (tShape obj in fig)
+                {
+                    while (!obj.CheckRange(pictureBox1.Width, pictureBox1.Height))
+                    {
+                        do
+                        {
+                            stepX = rnd.Next(-3, 3);
+                            stepY = rnd.Next(-3, 3);
+                        } while (stepX == 0 && stepY == 0);
+
+
+                        obj.stepX = stepX;
+                        obj.stepY = stepY;
+                    }
+                    obj.Hide(g, pictureBox1.BackColor);
+                    obj.Move();
+                    obj.Draw(g);
+                }
+                Application.DoEvents();
+                Thread.Sleep(1);
+            }
+            
+
+
+
+        /*    switch (comboBox1.SelectedItem.ToString())
             {
                 case "Отрезок":
                     {
@@ -347,6 +348,7 @@ namespace oop_lab2
                         break;
                     }
             }
+            */
             
         }
 
@@ -358,6 +360,73 @@ namespace oop_lab2
         private void buttonClose_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void buttonDraw_Click(object sender, EventArgs e)
+        {
+            if(comboBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("Выберите фигуру для рисования");
+                return;
+            }
+
+            if (panel1.BackColor == pictureBox1.BackColor)
+            {
+                MessageBox.Show("Сначала выберите цвет фигуры и толщину линии");
+                comboBox1.SelectedIndex = -1;
+                return;
+            }
+            int halfWidth = pictureBox1.Width / 2;
+            int halfHeight = pictureBox1.Height / 2;
+
+            switch (comboBox1.SelectedItem.ToString())
+            {
+                case "Отрезок":
+                    {
+                        line = new tLine(halfWidth - FG_LENGTH / 2, halfHeight, halfWidth + FG_LENGTH / 2, halfHeight,
+                            panel1.BackColor, Convert.ToInt32(lineWidth.Value));
+                        line.Draw(g);
+                        fig.Add(line);
+                        break;
+                    }
+
+                case "Треугольник":
+                    {
+                        triangle = new tTriangle(halfWidth - FG_LENGTH / 2, halfHeight, halfWidth, halfHeight - FG_HEIGHT,
+                            halfWidth + FG_LENGTH / 2, halfHeight, panel1.BackColor, Convert.ToInt32(lineWidth.Value));
+                        triangle.Draw(g);
+                        fig.Add(triangle);
+                        break;
+                    }
+                case "Прямоугольник":
+                    {
+                        rectangle = new tRectangle(halfWidth - FG_LENGTH / 2, halfHeight - FG_HEIGHT / 2,
+                                                    halfWidth + FG_LENGTH / 2, halfHeight - FG_HEIGHT / 2,
+                                                    halfWidth + FG_LENGTH / 2, halfHeight + FG_HEIGHT / 2,
+                                                    panel1.BackColor, Convert.ToInt32(lineWidth.Value));
+                        rectangle.Draw(g);
+                        fig.Add(rectangle);
+                        break;
+                    }
+                case "Окружность":
+                    {
+                        circle = new tCircle(halfWidth - FG_HEIGHT / 2, halfHeight - FG_HEIGHT / 2, FG_HEIGHT,
+                                                panel1.BackColor, Convert.ToInt32(lineWidth.Value));
+                        circle.Draw(g);
+                        fig.Add(circle);
+                        break;
+                    }
+                case "Эллипс":
+                    {
+                        ellips = new tEllipse(halfWidth - FG_LENGTH / 2, halfHeight - FG_HEIGHT / 2,
+                                                FG_LENGTH, FG_HEIGHT, panel1.BackColor, Convert.ToInt32(lineWidth.Value));
+                        ellips.Draw(g);
+                        fig.Add(ellips);
+                        break;
+                    }
+
+            }
+            pictureBox1.Focus();
         }
     }
 }
