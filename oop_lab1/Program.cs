@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
-namespace oop_lab2
+namespace oop_lab3
 {
     static class Program
     {

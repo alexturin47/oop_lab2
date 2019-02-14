@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Threading;
 
-namespace oop_lab2
+namespace oop_lab3
 {
     
     public partial class mainform : Form

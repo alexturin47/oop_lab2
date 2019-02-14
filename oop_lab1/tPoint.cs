@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace oop_lab2
+namespace oop_lab3
 {
     class tPoint 
     {
