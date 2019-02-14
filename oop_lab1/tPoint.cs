@@ -2,7 +2,7 @@
 
 namespace oop_lab2
 {
-    class tPoint
+    class tPoint 
     {
         private Color _color = Color.Black;
         private int _x = 0;
@@ -57,7 +57,7 @@ namespace oop_lab2
             if (size > 0) _size = size;
         }
 
-        public void Move(int stepX, int stepY)
+        public virtual void Move(int stepX, int stepY)
         {
             _x += stepX;
             _y += stepY;
@@ -102,20 +102,20 @@ namespace oop_lab2
         }
 
         //Метод рисования линии
-        public void DrawLine(Graphics gfx)
+        public virtual void Draw(Graphics gfx)
         {
             Pen pen = new Pen(getColor(), getSize());
             gfx.DrawLine(pen, getX(), getY(), getX2(), getY2());
         }
 
         // Метод стиания линии
-        public void HideLine(Graphics gfx, Color bg)
+        public virtual void Hide(Graphics gfx, Color bg)
         {
             Pen pen = new Pen(bg, getSize());
             gfx.DrawLine(pen, getX(), getY(), getX2(), getY2());
         }
 
-        public void  MoveLine(int stepX, int stepY)
+        public override void  Move(int stepX, int stepY)
         {
             setX(getX() + stepX);
             setY(getY() + stepY);
@@ -164,7 +164,7 @@ namespace oop_lab2
             _y3 = y;
         }
 
-        public void DrawTriangle(Graphics gfx)
+        public override void Draw(Graphics gfx)
         {
             Pen pen = new Pen(getColor(), getSize());
             for( int i = 0; i < 3; i++)
@@ -175,9 +175,9 @@ namespace oop_lab2
             }
         }
 
-        public void HideTriangle(Graphics gfx)
+        public override void Hide(Graphics gfx, Color bg)
         {
-            Pen pen = new Pen(Color.White, getSize());
+            Pen pen = new Pen(bg, getSize());
             for (int i = 0; i < 3; i++)
             {
                 gfx.DrawLine(pen, getX(), getY(), getX2(), getY2());
@@ -186,7 +186,7 @@ namespace oop_lab2
             }
         }
 
-        public void MoveTriangle(int stepX, int stepY)
+        public override void Move(int stepX, int stepY)
         {
             setX(getX() + stepX);
             setY(getY() + stepY);
@@ -257,9 +257,9 @@ namespace oop_lab2
         }
 
 
-        public void HideRectangle(Graphics gfx)
+        public override void Hide(Graphics gfx, Color bg)
         {
-            Pen pen = new Pen(Color.White, getSize());
+            Pen pen = new Pen(bg, getSize());
             for (int i = 0; i < 3; i++)
             {
                 gfx.DrawLine(pen, getX(), getY(), getX2(), getY2());
@@ -269,7 +269,7 @@ namespace oop_lab2
             }
         }
 
-        public void DrawRectangle(Graphics gfx)
+        public override void Draw(Graphics gfx)
         {
             Pen pen = new Pen(getColor(), getSize());
             for (int i = 0; i < 3; i++)
@@ -281,7 +281,7 @@ namespace oop_lab2
             }
         }
 
-        public void MoveRectangle( int stepX, int stepY)
+        public override void Move( int stepX, int stepY)
         {
             setX(getX() + stepX);
             setY(getY() + stepY);
@@ -318,19 +318,19 @@ namespace oop_lab2
             if (r > 0) _r = r;
         }
 
-        public void DrawCircle(Graphics gfx)
+        public virtual void Draw(Graphics gfx)
         {
             Pen pen = new Pen(getColor(), getSize());
             gfx.DrawEllipse(pen, getX(), getY(), getR(), getR());
         }
 
-        public void HideCircle(Graphics gfx)
+        public virtual void Hide(Graphics gfx, Color bg)
         {
             Pen pen = new Pen(Color.White, getSize());
             gfx.DrawEllipse(pen, getX(), getY(), getR(), getR());
         }
 
-        public void MoveCircle(int stepX, int stepY)
+        public override void Move(int stepX, int stepY)
         {
             setX(getX() + stepX);
             setY(getY() + stepY);
@@ -358,19 +358,19 @@ namespace oop_lab2
             _r2 = r2;
         }
 
-        public void DrawEllipse(Graphics gfx)
+        public override void Draw(Graphics gfx)
         {
             Pen pen = new Pen(getColor(), getSize());
             gfx.DrawEllipse(pen, getX(), getY(), getR(), getR2());
         }
 
-        public void HideEllipse(Graphics gfx)
+        public override void Hide(Graphics gfx, Color bg)
         {
             Pen pen = new Pen(Color.White, getSize());
             gfx.DrawEllipse(pen, getX(), getY(), getR(), getR2());
         }
 
- 
+        
     }
    
 }

@@ -10,8 +10,6 @@ namespace oop_lab2
     {
         private Graphics g;
         private Bitmap bitmap;
-        private int coordX = 0;
-        private int coordY = 0;
         private tLine line;
         private tTriangle triangle;
         private tRectangle rectangle;
@@ -60,37 +58,37 @@ namespace oop_lab2
             {
                 case "Отрезок":
                     {
-                        line.HideLine(g, pictureBox1.BackColor);
-                        line.MoveLine(stepX, stepY);
-                        line.DrawLine(g);
+                        line.Hide(g, pictureBox1.BackColor);
+                        line.Move(stepX, stepY);
+                        line.Draw(g);
                         break;
                     }
                 case "Треугольник":
                     {
-                        triangle.HideTriangle(g);
-                        triangle.MoveTriangle(stepX, stepY);
-                        triangle.DrawTriangle(g);
+                        triangle.Hide(g, pictureBox1.BackColor);
+                        triangle.Move(stepX, stepY);
+                        triangle.Draw(g);
                         break;
                     }
                 case "Прямоугольник":
                     {
-                        rectangle.HideRectangle(g);
-                        rectangle.MoveRectangle(stepX, stepY);
-                        rectangle.DrawRectangle(g);
+                        rectangle.Hide(g, pictureBox1.BackColor);
+                        rectangle.Move(stepX, stepY);
+                        rectangle.Draw(g);
                         break;
                     }
                 case "Окружность":
                     {
-                        circle.HideCircle(g);
-                        circle.MoveCircle(stepX, stepY);
-                        circle.DrawCircle(g);
+                        circle.Hide(g, pictureBox1.BackColor);
+                        circle.Move(stepX, stepY);
+                        circle.Draw(g);
                         break;
                     }
                 case "Эллипс":
                     {
-                        ellips.HideEllipse(g);
-                        ellips.MoveCircle(stepX, stepY);
-                        ellips.DrawEllipse(g);
+                        ellips.Hide(g, pictureBox1.BackColor);
+                        ellips.Move(stepX, stepY);
+                        ellips.Draw(g);
                         break;
                     }
             }
@@ -161,7 +159,7 @@ namespace oop_lab2
                     {
                         line = new tLine(halfWidth - FG_LENGTH / 2, halfHeight, halfWidth + FG_LENGTH / 2, halfHeight, 
                             panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        line.DrawLine(g);
+                        line.Draw(g);
                         break;
                     }
 
@@ -169,7 +167,7 @@ namespace oop_lab2
                     {
                         triangle = new tTriangle(halfWidth - FG_LENGTH /2 , halfHeight, halfWidth, halfHeight - FG_HEIGHT, 
                             halfWidth + FG_LENGTH /2, halfHeight, panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        triangle.DrawTriangle(g);
+                        triangle.Draw(g);
                         break;
                     }
                 case "Прямоугольник":
@@ -178,21 +176,21 @@ namespace oop_lab2
                                                     halfWidth + FG_LENGTH / 2, halfHeight - FG_HEIGHT /2,
                                                     halfWidth + FG_LENGTH / 2, halfHeight + FG_HEIGHT / 2,
                                                     panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        rectangle.DrawRectangle(g);
+                        rectangle.Draw(g);
                         break;
                     }
                 case "Окружность":
                     {
                         circle = new tCircle(halfWidth - FG_HEIGHT / 2, halfHeight - FG_HEIGHT / 2, FG_HEIGHT,  
                                                 panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        circle.DrawCircle(g);
+                        circle.Draw(g);
                         break;
                     }
                 case "Эллипс":
                     {
                         ellips = new tEllipse(halfWidth - FG_LENGTH / 2, halfHeight - FG_HEIGHT / 2, 
                                                 FG_LENGTH, FG_HEIGHT, panel1.BackColor, Convert.ToInt32(lineWidth.Value));
-                        ellips.DrawEllipse(g);
+                        ellips.Draw(g);
                         break;
                     }
                     
@@ -244,9 +242,9 @@ namespace oop_lab2
                                 stepY = -stepY;
                             }
 
-                            line.HideLine(g, pictureBox1.BackColor);
-                            line.MoveLine(stepX, stepY);
-                            line.DrawLine(g);
+                            line.Hide(g, pictureBox1.BackColor);
+                            line.Move(stepX, stepY);
+                            line.Draw(g);
                             Application.DoEvents();
                             Thread.Sleep(1);
                         }
@@ -269,9 +267,9 @@ namespace oop_lab2
                             {
                                 stepY = -stepY;
                             }
-                            triangle.HideTriangle(g);
-                            triangle.MoveTriangle(stepX, stepY);
-                            triangle.DrawTriangle(g);
+                            triangle.Hide(g, pictureBox1.BackColor);
+                            triangle.Move(stepX, stepY);
+                            triangle.Draw(g);
                             Application.DoEvents();
                             Thread.Sleep(1);
                         }
@@ -297,9 +295,9 @@ namespace oop_lab2
                                 stepY = -stepY;
                             }
 
-                            rectangle.HideRectangle(g);
-                            rectangle.MoveRectangle(stepX, stepY);
-                            rectangle.DrawRectangle(g);
+                            rectangle.Hide(g, pictureBox1.BackColor);
+                            rectangle.Move(stepX, stepY);
+                            rectangle.Draw(g);
                             Application.DoEvents();
                             Thread.Sleep(1);
                         }
@@ -319,9 +317,9 @@ namespace oop_lab2
                                 stepY = -stepY;
                             }
 
-                            circle.HideCircle(g);
-                            circle.MoveCircle(stepX, stepY);
-                            circle.DrawCircle(g);
+                            circle.Hide(g, pictureBox1.BackColor);
+                            circle.Move(stepX, stepY);
+                            circle.Draw(g);
                             Application.DoEvents();
                             Thread.Sleep(1);
                         }
@@ -340,9 +338,9 @@ namespace oop_lab2
                             {
                                 stepY = -stepY;
                             }
-                            ellips.HideEllipse(g);
-                            ellips.MoveCircle(stepX, stepY);
-                            ellips.DrawEllipse(g);
+                            ellips.Hide(g, pictureBox1.BackColor);
+                            ellips.Move(stepX, stepY);
+                            ellips.Draw(g);
                             Application.DoEvents();
                             Thread.Sleep(1);
                         }
